@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "geogate",
+  "version": "${version}",
+  "name": "Geogate",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/geogate/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "me.ricky.geogate.Geogate"
+    ]
+  },
+  "mixins": [
+    "geogate.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
