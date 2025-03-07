@@ -22,7 +22,8 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
 
-    // Jetty implementation("org.eclipse.jetty:jetty-server:${project.property("server_version")}")
+    // Jetty
+    implementation("org.eclipse.jetty:jetty-server:${project.property("server_version")}")
     implementation("org.eclipse.jetty.ee10:jetty-ee10-webapp:${project.property("webapp_version")}")
     implementation("org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jetty-server:${project.property("socket_version")}")
 
@@ -32,7 +33,7 @@ tasks {
     processResources {
         val properties = mapOf(
             "version" to project.version,
-            "mc_version" to project.property("minecraft_version"),
+            "minecraft_version" to project.property("minecraft_version"),
             "loader_version" to project.property("loader_version")
         )
 
