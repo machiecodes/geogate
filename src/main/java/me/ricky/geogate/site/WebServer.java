@@ -25,7 +25,6 @@ public class WebServer {
      * to the secure site.
      *
      * @return <code>false</code> if an exception occurred while initializing the server/socket.
-     * @author Machie
      */
     public static boolean start() {
         createServer();
@@ -45,8 +44,6 @@ public class WebServer {
 
     /**
      * Stops the web server if it's running.
-     *
-     * @author Machie
      */
     public static void stop() {
         if (server == null || !server.isRunning()) {
