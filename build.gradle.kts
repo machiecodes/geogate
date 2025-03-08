@@ -27,6 +27,8 @@ dependencies {
     implementation("org.eclipse.jetty.ee10:jetty-ee10-webapp:${project.property("webapp_version")}")
     implementation("org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jetty-server:${project.property("socket_version")}")
 
+    // SnakeYaml
+    implementation("org.yaml:snakeyaml:${project.property("snakeyaml_version")}")
 }
 
 tasks {
