@@ -13,6 +13,7 @@ public class WebServer {
     private static Server server;
 
     static {
+        // Jetty logs a bunch of annoying info when setting up a server
         Configurator.setLevel("org.eclipse.jetty", Level.WARN);
         Configurator.setLevel("org.eclipse.jetty.server", Level.WARN);
         Configurator.setLevel("org.eclipse.jetty.util", Level.WARN);
@@ -24,7 +25,7 @@ public class WebServer {
      * to the secure site.
      *
      * @return <code>false</code> if an exception occurred while initializing the server/socket.
-     * @author MachieCodes
+     * @author Machie
      */
     public static boolean start() {
         createServer();
@@ -42,15 +43,19 @@ public class WebServer {
         }
     }
 
+    /**
+     * Stops the web server if it's running.
+     *
+     * @author Machie
+     */
     public static void stop() {
         if (server == null || !server.isRunning()) {
-            Geogate.LOG.warn("Attempted to stop null/unstarted web server!");
+            Geogate.LOG.warn("Attempted to stop null or not-running web server!");
             return;
         }
 
         try {
             server.stop();
-
             Geogate.LOG.info("Stopped the web server successfully!");
         } catch (Exception e) {
             Geogate.LOG.error("Failed to stop web server!", e);
@@ -65,8 +70,6 @@ public class WebServer {
 
         server = new Server(threadPool);
 
-
-
         Connector connector = new ServerConnector(server);
         server.addConnector(connector);
 
@@ -77,5 +80,7 @@ public class WebServer {
                 return true;
             }
         });
+
+        // TODO actually implement this :P
     }
 }

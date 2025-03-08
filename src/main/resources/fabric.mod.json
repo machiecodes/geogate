@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "Geogate",
   "description": "Only allow joins from a certain geographical area.",
-  "authors": ["MachieChirps"],
+  "authors": ["Machie"],
   "contact": {},
   "license": "All-Rights-Reserved",
   "icon": "assets/geogate/icon.png",
