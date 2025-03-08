@@ -1,6 +1,8 @@
 package me.ricky.geogate.site;
 
 import me.ricky.geogate.Geogate;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.util.Callback;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
@@ -8,8 +10,13 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import java.util.concurrent.*;
 
 public class WebServer {
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private static Server server;
+
+    static {
+        Configurator.setLevel("org.eclipse.jetty", Level.WARN);
+        Configurator.setLevel("org.eclipse.jetty.server", Level.WARN);
+        Configurator.setLevel("org.eclipse.jetty.util", Level.WARN);
+    }
 
     /**
      * Initializes the IP verification website hosted by the mod and the websocket that allows communication between
@@ -22,56 +29,31 @@ public class WebServer {
     public static boolean start() {
         createServer();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(WebServer::stop));
-
-        Future<Exception> serverFuture = executor.submit(() -> {
-            try {
-                server.start();
-                return null;
-            } catch (Exception e) {
-                return e;
-            }
-        });
-
         try {
-            Exception e = serverFuture.get(5, TimeUnit.SECONDS);
-            if (e != null) throw e;
-            Geogate.LOG.info("Web server started successfully!");
+            server.start();
 
+            Geogate.LOG.info("Web server started successfully!");
             return true;
         } catch (Exception e) {
-            Geogate.LOG.error("Exception while starting web server!", e);
             stop();
 
+            Geogate.LOG.error("Exception while starting web server!", e);
             return false;
         }
     }
 
     public static void stop() {
-        Geogate.LOG.info("Testing");
-
-        if (server == null) {
+        if (server == null || !server.isRunning()) {
             Geogate.LOG.warn("Attempted to stop null/unstarted web server!");
             return;
         }
 
         try {
-            Geogate.LOG.info("Stopping web server");
             server.stop();
-            Geogate.LOG.info("Web server stopped, joining");
-            server.join();
-            Geogate.LOG.info("Web server joined");
+
+            Geogate.LOG.info("Stopped the web server successfully!");
         } catch (Exception e) {
             Geogate.LOG.error("Failed to stop web server!", e);
-        }
-
-        try {
-            executor.shutdown();
-            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            Geogate.LOG.error("Failed to stop executor!", e);
         }
     }
 
@@ -82,6 +64,8 @@ public class WebServer {
         threadPool.setMinThreads(1);
 
         server = new Server(threadPool);
+
+
 
         Connector connector = new ServerConnector(server);
         server.addConnector(connector);
