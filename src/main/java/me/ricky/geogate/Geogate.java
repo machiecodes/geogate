@@ -18,17 +18,9 @@ public class Geogate implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
-
-
-
-        if (!WebServer.start()) {
-            System.exit(1);
-            return;
-        }
-
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-
+            loadedSafely = WebServer.start();
+            if (!loadedSafely) LOG.error("Failed to start web server, geogate will be inactive!");
         });
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
@@ -37,13 +29,15 @@ public class Geogate implements ModInitializer {
         });
 
         ServerLoginConnectionEvents.INIT.register((handler, server) -> {
+            if (!loadedSafely) return;
 
+            // Stuff
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            if (!loadedSafely) return;
 
+            // Stuff
         });
-
-
     }
 }
