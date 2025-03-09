@@ -14,10 +14,7 @@ import org.yaml.snakeyaml.introspector.BeanAccess;
 import org.yaml.snakeyaml.introspector.FieldProperty;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
-import org.yaml.snakeyaml.nodes.MappingNode;
-import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.nodes.NodeTuple;
-import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.nodes.*;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
@@ -132,6 +129,14 @@ public class ConfigManager {
         }
     }
 
+    /**
+     * Custom representer with several changes to improve config readability, including:
+     * <ul>
+     *     <li>Support for comments added via field annotations</li>
+     *     <li>Spaces between commented fields</li>
+     *     <li>Wrapping string values with quotes</li>
+     * </ul>
+     */
     private static class PrettyRepresenter extends Representer {
         private boolean lastHadComments = false;
 
@@ -144,10 +149,12 @@ public class ConfigManager {
             Object javaBean, Property property,
             Object propertyValue, Tag customTag
         ) {
-            NodeTuple original = super.representJavaBeanProperty(javaBean, property, propertyValue, customTag);
+            // Doesn't seem like these matter after digging around a bit so just make dummies
+            Mark start = new Mark("", 0, 0, 0, new char[0], 0);
+            Mark end = new Mark("", 0, 0, 0, new char[0], 0);
 
-            Node keyNode = original.getKeyNode();
-            Node valueNode = original.getValueNode();
+            Node keyNode = new ScalarNode(Tag.STR, property.getName(), start, end, DumperOptions.ScalarStyle.PLAIN);
+            Node valueNode = representData(propertyValue);
 
             try {
                 Field field = javaBean.getClass().getDeclaredField(property.getName());
@@ -155,14 +162,10 @@ public class ConfigManager {
                 PreComment preComment = field.getAnnotation(PreComment.class);
                 PostComment postComment = field.getAnnotation(PostComment.class);
 
-                Mark start = keyNode.getStartMark();
-                Mark end = keyNode.getEndMark();
-
                 if (preComment != null) {
                     List<CommentLine> comments = new ArrayList<>();
 
                     if (!lastHadComments) comments.add(new CommentLine(start, end, "", CommentType.BLANK_LINE));
-
 
                     for (String line : preComment.value().split("\n")) {
                         CommentLine comment = new CommentLine(start, end, " " + line, CommentType.BLOCK);
@@ -187,7 +190,7 @@ public class ConfigManager {
 
                 lastHadComments = preComment != null || postComment != null;
 
-                return original;
+                return new NodeTuple(keyNode, valueNode);
             } catch (NoSuchFieldException e) {
                 throw new RuntimeException(e);
             }
@@ -197,6 +200,12 @@ public class ConfigManager {
         protected MappingNode representJavaBean(Set<Property> properties, Object javaBean) {
             lastHadComments = false;
             return super.representJavaBean(properties, javaBean);
+        }
+
+        @Override
+        protected Node representScalar(Tag tag, String value, DumperOptions.ScalarStyle style) {
+            if (tag.equals(Tag.STR)) style = DumperOptions.ScalarStyle.DOUBLE_QUOTED;
+            return super.representScalar(tag, value, style);
         }
     }
 }
