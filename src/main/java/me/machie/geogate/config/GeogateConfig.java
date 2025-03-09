@@ -1,28 +1,32 @@
 package me.machie.geogate.config;
 
-import java.util.*;
-
 @SuppressWarnings("unused")
 public class GeogateConfig {
-    @PreComment("""
-        Testing one two
-        This is a multiline comment :D
-        """)
-    @PostComment("This is a postcomment on a primitive")
-    public int testPrimitive = 10;
+    private int thing1 = 0;
+    private int thing2 = 1;
+    private float thing3 = 2.77f;
 
-    @PreComment("This is a precomment on an array")
-    @PostComment("And this is a postcomment on an array")
-    public String[] testArray = {"1", "2", "3"};
+    public void setThing1(int thing1) {
+        this.thing1 = thing1;
+    }
 
-    public String partner1 = "I'm stupid";
-    public String partner2 = "^ I'm with stupid";
+    public void setThing2(int thing2) {
+        this.thing2 = thing2;
+    }
 
-    @PreComment("This is a list!")
-    public List<String> testList = new ArrayList<>();
-    {
-        testList.add("It contains this");
-        testList.add("And this");
-        testList.add("And also this");
+    public void setThing3(float thing3) {
+        this.thing3 = thing3;
+    }
+
+    public int getThing1() {
+        return thing1;
+    }
+
+    public int getThing2() {
+        return thing2;
+    }
+
+    public float getThing3() {
+        return thing3;
     }
 }
