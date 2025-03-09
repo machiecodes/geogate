@@ -1,8 +1,8 @@
-package me.ricky.geogate;
+package me.machie.geogate;
 
-import me.ricky.geogate.config.ConfigManager;
-import me.ricky.geogate.config.GeogateConfig;
-import me.ricky.geogate.site.WebServer;
+import me.machie.geogate.config.ConfigManager;
+import me.machie.geogate.config.GeogateConfig;
+import me.machie.geogate.site.WebServer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;

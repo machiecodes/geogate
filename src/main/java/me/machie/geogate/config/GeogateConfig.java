@@ -1,11 +1,13 @@
-package me.ricky.geogate.config;
+package me.machie.geogate.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class GeogateConfig {
-    @PreComment("This is a precomment on a primitive")
+    @PreComment("""
+        Testing one two
+        This is a multiline comment :D
+    """)
     @PostComment("This is a postcomment on a primitive")
     public int testPrimitive = 10;
 
@@ -18,8 +20,7 @@ public class GeogateConfig {
 
     @PreComment("This is a list!")
     public List<String> testList = new ArrayList<>();
-
-    public GeogateConfig() {
+    {
         testList.add("It contains this");
         testList.add("And this");
         testList.add("And also this");

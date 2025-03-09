@@ -1,4 +1,4 @@
-package me.ricky.geogate.config;
+package me.machie.geogate.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,13 +1,11 @@
-package me.ricky.geogate.site;
+package me.machie.geogate.site;
 
-import me.ricky.geogate.Geogate;
+import me.machie.geogate.Geogate;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.util.Callback;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-
-import java.util.concurrent.*;
 
 public class WebServer {
     private static Server server;

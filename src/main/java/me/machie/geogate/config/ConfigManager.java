@@ -1,6 +1,6 @@
-package me.ricky.geogate.config;
+package me.machie.geogate.config;
 
-import me.ricky.geogate.Geogate;
+import me.machie.geogate.Geogate;
 import net.fabricmc.loader.api.FabricLoader;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
