@@ -88,8 +88,8 @@ public class ConfigManager {
 
     /**
      * Serializes a {@link GeogateConfig} object to a config file, adding comments
-     * above fields as indicated by {@link PreComment} annotations and creating the
-     * needed directories/files if they don't already exist.
+     * around fields as indicated by annotations and creating the needed directories
+     * or files if they don't already exist.
      *
      * @param config The GeogateConfig object to serialize
      */
@@ -119,7 +119,6 @@ public class ConfigManager {
         protected Set<Property> createPropertySet(Class<?> type, BeanAccess bAccess) {
             Set<Property> properties = new LinkedHashSet<>();
 
-            // Get properties in the order they were declared
             Field[] fields = type.getDeclaredFields();
             for (Field field : fields) {
                 properties.add(new FieldProperty(field));

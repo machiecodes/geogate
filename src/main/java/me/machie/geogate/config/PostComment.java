@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Represents a comment in a YAML file added above the target field.
+ * Represents a comment in a YAML file added below the target field.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
