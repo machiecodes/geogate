@@ -7,7 +7,7 @@ public class GeogateConfig {
     @PreComment("""
         Testing one two
         This is a multiline comment :D
-    """)
+        """)
     @PostComment("This is a postcomment on a primitive")
     public int testPrimitive = 10;
 
