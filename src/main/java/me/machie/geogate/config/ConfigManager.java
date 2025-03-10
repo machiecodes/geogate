@@ -1,7 +1,10 @@
 package me.machie.geogate.config;
 
 import me.machie.geogate.Geogate;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -30,14 +33,12 @@ public class ConfigManager {
     private static final Yaml yaml;
 
     static {
-        // Ensure we don't try to serialize objects not of the config type
         LoaderOptions loaderOptions = new LoaderOptions();
         loaderOptions.setTagInspector(tag ->
             tag.getClassName().equals(GeogateConfig.class.getName()));
 
         Constructor constructor = new Constructor(GeogateConfig.class, loaderOptions);
 
-        // Configure dumping an object to a file
         DumperOptions dumperOptions = new DumperOptions();
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         dumperOptions.setPrettyFlow(true);
@@ -61,9 +62,10 @@ public class ConfigManager {
         Path configFolder = FabricLoader.getInstance().getConfigDir();
         configFile = new File(configFolder.toFile(), "geogate.yaml");
 
-        GeogateConfig config = new GeogateConfig();
+        GeogateConfig config = null;
 
         if (!configFile.exists()) {
+            config = new GeogateConfig();
             save(config);
             return config;
         }
@@ -71,16 +73,29 @@ public class ConfigManager {
         try (FileInputStream stream = new FileInputStream(configFile)) {
             config = yaml.load(stream);
         } catch (IOException e) {
-            Geogate.LOG.error("Failed to read config file!", e);
+            Geogate.LOG.error("Encountered error while reading config:", e);
         } catch (YAMLException e) {
-            Geogate.LOG.error("Config file had invalid formatting:", e);
-
-            // TODO Figure out what happens if there's invalid formatting
+            Geogate.LOG.error("Encountered bad formatting in config:", e);
         }
 
         if (config == null) {
-            config = new GeogateConfig();
-            save(config);
+            File brokenFile = new File(configFolder.toFile(), "geogate.yaml.broken");
+            configFile.renameTo(brokenFile);
+            configFile.delete();
+
+            Geogate.LOG.error("""
+                \nGeogate encountered an error while attempting to load your config.
+                To prevent players from outside locations joining, the server startup
+                has been halted.
+                
+                If this was an I/O exception, please open and attach this log make sure
+                the files in the config folder can be accessed without admin privileges.
+                
+                If this was a problem with your config's formatting, it has been renamed
+                to geogate.yaml.broken. You can fix the issue (which should be indicated
+                in the error message), or create a new default config by restarting.
+                """
+            );
         }
 
         return config;
