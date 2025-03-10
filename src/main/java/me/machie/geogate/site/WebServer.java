@@ -29,13 +29,10 @@ public class WebServer {
 
         try {
             server.start();
-
-            Geogate.LOG.info("Web server started successfully!");
             return true;
         } catch (Exception e) {
             stop();
-
-            Geogate.LOG.error("Exception while starting web server!", e);
+            Geogate.LOG.error("Encountered an error while starting the web server:", e);
             return false;
         }
     }
@@ -44,19 +41,17 @@ public class WebServer {
      * Stops the web server if it's running.
      */
     public static void stop() {
-        if (server == null || !server.isRunning()) {
-            Geogate.LOG.warn("Attempted to stop null or not-running web server!");
-            return;
-        }
+        if (server == null || !server.isRunning()) return;
 
         try {
             server.stop();
-            Geogate.LOG.info("Stopped the web server successfully!");
         } catch (Exception e) {
-            Geogate.LOG.error("Failed to stop web server!", e);
+            Geogate.LOG.error("Failed to shut down web server:", e);
         }
     }
 
+
+    // TODO make the actual webserver lole
     private static void createServer() {
         QueuedThreadPool threadPool = new QueuedThreadPool();
         threadPool.setName("webserver-pool");
@@ -75,7 +70,5 @@ public class WebServer {
                 return true;
             }
         });
-
-        // TODO actually implement this :P
     }
 }

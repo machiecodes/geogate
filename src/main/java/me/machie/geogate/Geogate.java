@@ -33,6 +33,7 @@ public class Geogate implements ModInitializer {
         if (CONFIG == null) {
             server.stop(false);
             return;
+            // TODO prevent saving null config
         }
 
         WebServer.start();
